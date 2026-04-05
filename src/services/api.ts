@@ -27,8 +27,7 @@ const getApiBaseUrl = (): string => {
   
   // Fallback based on environment
   if (import.meta.env.MODE === 'production') {
-    return 'https://pms-b.onrender.com/api';
-  }
+return import.meta.env.VITE_API_URL || 'http://localhost:3001/api';  }
   
   // Development default
   return 'http://localhost:3001/api';
