@@ -1,0 +1,11 @@
+# frontend/render.yaml
+services:
+  - type: static
+    name: pmsimplex-frontend
+    env: static
+    buildCommand: pnpm install && pnpm run build
+    publishPath: dist
+    branch: main
+    envVars:
+      - key: VITE_API_URL
+        value: https://pmsimplex-b-04-04-26.onrender.com
