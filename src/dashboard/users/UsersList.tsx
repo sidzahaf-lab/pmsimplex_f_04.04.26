@@ -1,5 +1,6 @@
 // frontend/src/dashboard/users/UsersList.tsx
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   useReactTable, 
   getCoreRowModel, 
@@ -105,6 +106,7 @@ interface Client {
 }
 
 export function UsersList() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [businessUnits, setBusinessUnits] = useState<BusinessUnit[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
@@ -628,7 +630,7 @@ export function UsersList() {
   // Handle edit user
   const handleEdit = (user: User) => {
     console.log('Edit user:', user);
-    window.location.href = `/users/edit/${user.id}`;
+    navigate(`/users/edit/${user.id}`);
   };
 
   // Get business unit name by ID
@@ -995,7 +997,7 @@ export function UsersList() {
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
               <Button 
-                onClick={() => window.location.href = '/users/create'}
+                onClick={() => navigate('/users/create')}
                 className="flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" />
@@ -1091,7 +1093,7 @@ export function UsersList() {
                 {databaseInfo?.connected && (
                   <div className="mt-4 space-x-2">
                     <Button 
-                      onClick={() => window.location.href = '/users/create'}
+                      onClick={() => navigate('/users/create')}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Create First User
