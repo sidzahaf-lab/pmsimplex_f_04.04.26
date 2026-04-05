@@ -36,7 +36,7 @@ const processQueue = (error: any = null, token: string | null = null) => {
 const getApiBaseUrl = (): string => {
   // TEMPORARY: Hardcoded to correct URL
   // TODO: Change back to environment variable after debugging
-  return 'https://pmsimplex-b-04-04-26.onrender.com/api';
+  return 'https://pmsimplex-b-04-04-26.onrender.com';
   
   // Original code commented out for now
   // const envUrl = import.meta.env.VITE_API_BASE_URL;
