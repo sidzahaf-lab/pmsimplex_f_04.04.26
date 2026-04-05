@@ -16,23 +16,40 @@ const processQueue = (error: any = null, token: string | null = null) => {
   failedQueue = [];
 };
 
+// // Environment-based API configuration
+// const getApiBaseUrl = (): string => {
+//   // Use environment variable first, then fallback
+//   const envUrl = import.meta.env.VITE_API_BASE_URL;
+  
+//   if (envUrl) {
+//     return envUrl;
+//   }
+  
+//   // Fallback based on environment
+//   if (import.meta.env.MODE === 'production') {
+// return import.meta.env.VITE_API_URL || 'http://localhost:3001/api';  }
+  
+//   // Development default
+//   return 'http://localhost:3001/api';
+// };
 // Environment-based API configuration
 const getApiBaseUrl = (): string => {
-  // Use environment variable first, then fallback
-  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  // TEMPORARY: Hardcoded to correct URL
+  // TODO: Change back to environment variable after debugging
+  return 'https://pmsimplex-b-04-04-26.onrender.com/api';
   
-  if (envUrl) {
-    return envUrl;
-  }
-  
-  // Fallback based on environment
-  if (import.meta.env.MODE === 'production') {
-return import.meta.env.VITE_API_URL || 'http://localhost:3001/api';  }
-  
-  // Development default
-  return 'http://localhost:3001/api';
+  // Original code commented out for now
+  // const envUrl = import.meta.env.VITE_API_BASE_URL;
+  // if (envUrl) {
+  //   return envUrl;
+  // }
+  // 
+  // if (import.meta.env.MODE === 'production') {
+  //   return import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+  // }
+  // 
+  // return 'http://localhost:3001/api';
 };
-
 const API_BASE: string = getApiBaseUrl();
 
 console.log(`🌍 API Base URL: ${API_BASE}`);
