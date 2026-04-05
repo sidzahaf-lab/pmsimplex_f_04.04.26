@@ -16,22 +16,6 @@ const processQueue = (error: any = null, token: string | null = null) => {
   failedQueue = [];
 };
 
-// // Environment-based API configuration
-// const getApiBaseUrl = (): string => {
-//   // Use environment variable first, then fallback
-//   const envUrl = import.meta.env.VITE_API_BASE_URL;
-  
-//   if (envUrl) {
-//     return envUrl;
-//   }
-  
-//   // Fallback based on environment
-//   if (import.meta.env.MODE === 'production') {
-// return import.meta.env.VITE_API_URL || 'http://localhost:3001/api';  }
-  
-//   // Development default
-//   return 'http://localhost:3001/api';
-// };
 // Environment-based API configuration
 const getApiBaseUrl = (): string => {
   // TEMPORARY: Hardcoded to correct URL
@@ -50,6 +34,7 @@ const getApiBaseUrl = (): string => {
   // 
   // return 'http://localhost:3001/api';
 };
+
 const API_BASE: string = getApiBaseUrl();
 
 console.log(`🌍 API Base URL: ${API_BASE}`);
@@ -136,7 +121,7 @@ apiClient.interceptors.response.use(
               throw new Error('No refresh token available');
             }
             
-            const response = await axios.post(`${API_BASE}/auth/refresh-token`, {
+            const response = await axios.post(`${API_BASE}/api/auth/refresh-token`, {
               refreshToken
             });
             
@@ -239,187 +224,187 @@ export const apiHelper = {
   },
 };
 
-// Auth API
+// Auth API - FIXED with /api prefix
 export const AuthAPI = {
   login: (email: string, password: string): Promise<AxiosResponse> => 
-    apiClient.post('/auth/login', { email, password }),
+    apiClient.post('/api/auth/login', { email, password }),
   
   refreshToken: (refreshToken: string): Promise<AxiosResponse> =>
-    apiClient.post('/auth/refresh-token', { refreshToken }),
+    apiClient.post('/api/auth/refresh-token', { refreshToken }),
   
   logout: (refreshToken: string): Promise<AxiosResponse> =>
-    apiClient.post('/auth/logout', { refreshToken }),
+    apiClient.post('/api/auth/logout', { refreshToken }),
   
   logoutAll: (): Promise<AxiosResponse> =>
-    apiClient.post('/auth/logout-all'),
+    apiClient.post('/api/auth/logout-all'),
   
   getMe: (): Promise<AxiosResponse> => 
-    apiClient.get('/auth/me'),
+    apiClient.get('/api/auth/me'),
   
   changePassword: (currentPassword: string, newPassword: string): Promise<AxiosResponse> =>
-    apiClient.post('/auth/change-password', { currentPassword, newPassword }),
+    apiClient.post('/api/auth/change-password', { currentPassword, newPassword }),
 };
 
 // Clients API
 export const ClientAPI = {
-  getAll: (): Promise<AxiosResponse> => apiClient.get('/clients'),
+  getAll: (): Promise<AxiosResponse> => apiClient.get('/api/clients'),
   getById: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/clients/${id}`),
+    apiClient.get(`/api/clients/${id}`),
   getBySlug: (slug: string): Promise<AxiosResponse> => 
-    apiClient.get(`/clients/slug/${slug}`),
+    apiClient.get(`/api/clients/slug/${slug}`),
   getMonorepoClient: (): Promise<AxiosResponse> => 
-    apiClient.get('/clients/monorepo'),
+    apiClient.get('/api/clients/monorepo'),
   getWithBusinessUnits: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/clients/${id}/with-business-units`),
+    apiClient.get(`/api/clients/${id}/with-business-units`),
   getBusinessUnitsCount: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/clients/${id}/business-units-count`),
+    apiClient.get(`/api/clients/${id}/business-units-count`),
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/clients', data),
+    apiClient.post('/api/clients', data),
   update: (id: string | number, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/clients/${id}`, data),
+    apiClient.put(`/api/clients/${id}`, data),
   delete: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.delete(`/clients/${id}`),
+    apiClient.delete(`/api/clients/${id}`),
   checkSlug: (slug: string): Promise<AxiosResponse> => 
-    apiClient.get('/clients/check-slug', { params: { slug } }),
+    apiClient.get('/api/clients/check-slug', { params: { slug } }),
   checkName: (name: string): Promise<AxiosResponse> => 
-    apiClient.get('/clients/check-name', { params: { name } }),
+    apiClient.get('/api/clients/check-name', { params: { name } }),
 };
 
 // Users API - EXTENDED
 export const UserAPI = {
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/users', { params }),
+    apiClient.get('/api/users', { params }),
   
   getById: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/users/${id}`),
+    apiClient.get(`/api/users/${id}`),
   
   getByBusinessUnit: (businessUnitId: string | number, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/users/business-unit/${businessUnitId}`, { params }),
+    apiClient.get(`/api/users/business-unit/${businessUnitId}`, { params }),
   
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/users', data),
+    apiClient.post('/api/users', data),
   
   update: (id: string | number, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/users/${id}`, data),
+    apiClient.put(`/api/users/${id}`, data),
   
   delete: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.delete(`/users/${id}`),
+    apiClient.delete(`/api/users/${id}`),
   
   login: (credentials: any): Promise<AxiosResponse> => 
-    apiClient.post('/users/login', credentials),
+    apiClient.post('/api/users/login', credentials),
   
   register: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/users/register', data),
+    apiClient.post('/api/users/register', data),
   
   logout: (): Promise<AxiosResponse> => 
-    apiClient.post('/users/logout'),
+    apiClient.post('/api/users/logout'),
   
   profile: (): Promise<AxiosResponse> => 
-    apiClient.get('/users/profile'),
+    apiClient.get('/api/users/profile'),
   
   updateProfile: (data: any): Promise<AxiosResponse> => 
-    apiClient.put('/users/profile', data),
+    apiClient.put('/api/users/profile', data),
   
   // Additional methods
   checkUsername: (username: string): Promise<AxiosResponse> => 
-    apiClient.get(`/users/check-username/${username}`),
+    apiClient.get(`/api/users/check-username/${username}`),
   
   checkEmail: (email: string): Promise<AxiosResponse> => 
-    apiClient.get(`/users/check-email/${email}`),
+    apiClient.get(`/api/users/check-email/${email}`),
   
   toggleStatus: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.patch(`/users/${id}/toggle-status`),
+    apiClient.patch(`/api/users/${id}/toggle-status`),
   
   deactivate: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.patch(`/users/${id}/deactivate`),
+    apiClient.patch(`/api/users/${id}/deactivate`),
   
   activate: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.patch(`/users/${id}/activate`),
+    apiClient.patch(`/api/users/${id}/activate`),
 };
 
 // Business Units API - EXTENDED
 export const BusinessUnitAPI = {
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/business-units', { params }),
+    apiClient.get('/api/business-units', { params }),
   
   getById: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/business-units/${id}`),
+    apiClient.get(`/api/business-units/${id}`),
   
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/business-units', data),
+    apiClient.post('/api/business-units', data),
   
   update: (id: string | number, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/business-units/${id}`, data),
+    apiClient.put(`/api/business-units/${id}`, data),
   
   delete: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.delete(`/business-units/${id}`),
+    apiClient.delete(`/api/business-units/${id}`),
   
   getByClient: (clientId: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/business-units/client/${clientId}`),
+    apiClient.get(`/api/business-units/client/${clientId}`),
   
   checkName: (name: string): Promise<AxiosResponse> => 
-    apiClient.get('/business-units/check-name', { params: { name } }),
+    apiClient.get('/api/business-units/check-name', { params: { name } }),
   
   // Additional methods
   toggleStatus: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.patch(`/business-units/${id}/toggle-status`),
+    apiClient.patch(`/api/business-units/${id}/toggle-status`),
   
   getWithProjects: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/business-units/${id}/with-projects`),
+    apiClient.get(`/api/business-units/${id}/with-projects`),
   
   getUsers: (id: string | number, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/business-units/${id}/users`, { params }),
+    apiClient.get(`/api/business-units/${id}/users`, { params }),
 };
 
 // Projects API
 export const ProjectAPI = {
   // Basic CRUD operations
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/projects', { params }),
+    apiClient.get('/api/projects', { params }),
   
   getById: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/projects/${id}`),
+    apiClient.get(`/api/projects/${id}`),
   
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/projects', data),
+    apiClient.post('/api/projects', data),
   
   update: (id: string | number, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/projects/${id}`, data),
+    apiClient.put(`/api/projects/${id}`, data),
   
   delete: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.delete(`/projects/${id}`),
+    apiClient.delete(`/api/projects/${id}`),
   
   getByBusinessUnit: (businessUnitId: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/projects/business-unit/${businessUnitId}`),
+    apiClient.get(`/api/projects/business-unit/${businessUnitId}`),
   
   // Additional endpoints from your TSX files
   getWithBusinessUnit: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/projects/with-business-unit', { params }),
+    apiClient.get('/api/projects/with-business-unit', { params }),
   
   updateStatus: (id: string | number, status: string): Promise<AxiosResponse> => 
-    apiClient.patch(`/projects/${id}/status`, { status }),
+    apiClient.patch(`/api/projects/${id}/status`, { status }),
   
   checkCode: (code: string): Promise<AxiosResponse> => 
-    apiClient.get('/projects/check-code', { params: { code } }),
+    apiClient.get('/api/projects/check-code', { params: { code } }),
   
   getMetricsSummary: (): Promise<AxiosResponse> => 
-    apiClient.get('/projects/metrics/summary'),
+    apiClient.get('/api/projects/metrics/summary'),
   
   // Additional methods
   updateHealthStatus: (id: string | number, healthStatus: string): Promise<AxiosResponse> => 
-    apiClient.patch(`/projects/${id}/health-status`, { health_status: healthStatus }),
+    apiClient.patch(`/api/projects/${id}/health-status`, { health_status: healthStatus }),
   
   updatePhase: (id: string | number, phase: string): Promise<AxiosResponse> => 
-    apiClient.patch(`/projects/${id}/phase`, { current_phase: phase }),
+    apiClient.patch(`/api/projects/${id}/phase`, { current_phase: phase }),
   
   getUpcoming: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/projects/upcoming', { params }),
+    apiClient.get('/api/projects/upcoming', { params }),
   
   getNearingCompletion: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/projects/nearing-completion', { params }),
+    apiClient.get('/api/projects/nearing-completion', { params }),
   
   getDelayed: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/projects/delayed', { params }),
+    apiClient.get('/api/projects/delayed', { params }),
 };
 
 // ============================================
@@ -428,67 +413,67 @@ export const ProjectAPI = {
 export const TeamAPI = {
   // Get all team assignments
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/teams', { params }),
+    apiClient.get('/api/teams', { params }),
   
   // Get team by ID
   getById: (id: string): Promise<AxiosResponse> => 
-    apiClient.get(`/teams/${id}`),
+    apiClient.get(`/api/teams/${id}`),
   
   // Create team assignment
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/teams', data),
+    apiClient.post('/api/teams', data),
   
   // Update team assignment
   update: (id: string, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/teams/${id}`, data),
+    apiClient.put(`/api/teams/${id}`, data),
   
   // Delete team assignment (hard delete)
   delete: (id: string): Promise<AxiosResponse> => 
-    apiClient.delete(`/teams/${id}`),
+    apiClient.delete(`/api/teams/${id}`),
   
   // Deactivate team assignment
   deactivate: (id: string): Promise<AxiosResponse> => 
-    apiClient.patch(`/teams/${id}/deactivate`),
+    apiClient.patch(`/api/teams/${id}/deactivate`),
   
   // Activate team assignment
   activate: (id: string): Promise<AxiosResponse> => 
-    apiClient.patch(`/teams/${id}/activate`),
+    apiClient.patch(`/api/teams/${id}/activate`),
   
   // Get teams by user
   getByUser: (userId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/teams/user/${userId}`, { params }),
+    apiClient.get(`/api/teams/user/${userId}`, { params }),
   
   // Get teams by business unit
   getByBusinessUnit: (businessUnitId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/teams/business-unit/${businessUnitId}`, { params }),
+    apiClient.get(`/api/teams/business-unit/${businessUnitId}`, { params }),
   
   // Get teams by project
   getByProject: (projectId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/teams/project/${projectId}`, { params }),
+    apiClient.get(`/api/teams/project/${projectId}`, { params }),
   
   // Get teams by role
   getByRole: (roleId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/teams/role/${roleId}`, { params }),
+    apiClient.get(`/api/teams/role/${roleId}`, { params }),
   
   // Get active teams by user
   getActiveByUser: (userId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/teams/user/${userId}/active`),
+    apiClient.get(`/api/teams/user/${userId}/active`),
   
-  // ✅ Get user role summary for consistency check
+  // Get user role summary for consistency check
   getUserRoleSummary: (userId: string, businessUnitId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/teams/user/${userId}/role-summary/${businessUnitId}`),
+    apiClient.get(`/api/teams/user/${userId}/role-summary/${businessUnitId}`),
   
-  // ✅ Get team statistics
+  // Get team statistics
   getStatistics: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/teams/statistics', { params }),
+    apiClient.get('/api/teams/statistics', { params }),
   
-  // ✅ Get users role consistency
+  // Get users role consistency
   getUsersConsistency: (businessUnitId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/teams/users/consistency/${businessUnitId}`),
+    apiClient.get(`/api/teams/users/consistency/${businessUnitId}`),
   
-  // ✅ Bulk create team assignments
+  // Bulk create team assignments
   bulkCreate: (teams: any[]): Promise<AxiosResponse> => 
-    apiClient.post('/teams/bulk', { teams }),
+    apiClient.post('/api/teams/bulk', { teams }),
 };
 
 // ============================================
@@ -502,13 +487,13 @@ export const RoleAPI = {
     if (params?.page) queryParams.append('page', params.page.toString());
     if (params?.scope) queryParams.append('scope', params.scope);
     
-    const url = `/roles${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = `/api/roles${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
     return apiClient.get(url);
   },
   
   // Get role by ID
   getById: (id: string): Promise<AxiosResponse> => 
-    apiClient.get(`/roles/${id}`),
+    apiClient.get(`/api/roles/${id}`),
   
   // Get roles by scope (project, bu, corporate)
   getByScope: (scope: string, params?: { limit?: number; page?: number }): Promise<AxiosResponse> => {
@@ -516,7 +501,7 @@ export const RoleAPI = {
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.page) queryParams.append('page', params.page.toString());
     
-    const url = `/roles/scope/${scope}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = `/api/roles/scope/${scope}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
     return apiClient.get(url);
   },
   
@@ -537,250 +522,250 @@ export const RoleAPI = {
   
   // Create role
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/roles', data),
+    apiClient.post('/api/roles', data),
   
   // Update role
   update: (id: string, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/roles/${id}`, data),
+    apiClient.put(`/api/roles/${id}`, data),
   
   // Delete role
   delete: (id: string): Promise<AxiosResponse> => 
-    apiClient.delete(`/roles/${id}`),
+    apiClient.delete(`/api/roles/${id}`),
   
   // Check role name availability
   checkName: (name: string): Promise<AxiosResponse> => 
-    apiClient.get(`/roles/check-name/${name}`),
+    apiClient.get(`/api/roles/check-name/${name}`),
   
   // Get role permissions
   getPermissions: (id: string): Promise<AxiosResponse> => 
-    apiClient.get(`/roles/${id}/permissions`),
+    apiClient.get(`/api/roles/${id}/permissions`),
   
   // Update role permissions
   updatePermissions: (id: string, permissions: string[]): Promise<AxiosResponse> => 
-    apiClient.put(`/roles/${id}/permissions`, { permissions }),
+    apiClient.put(`/api/roles/${id}/permissions`, { permissions }),
 };
 
 // Deliverables API
 export const DeliverableAPI = {
-  getAll: (): Promise<AxiosResponse> => apiClient.get('/deliverables'),
+  getAll: (): Promise<AxiosResponse> => apiClient.get('/api/deliverables'),
   getById: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/deliverables/${id}`),
+    apiClient.get(`/api/deliverables/${id}`),
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/deliverables', data),
+    apiClient.post('/api/deliverables', data),
   update: (id: string | number, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/deliverables/${id}`, data),
+    apiClient.put(`/api/deliverables/${id}`, data),
   delete: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.delete(`/deliverables/${id}`),
+    apiClient.delete(`/api/deliverables/${id}`),
   getByProject: (projectId: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/deliverables/project/${projectId}`),
+    apiClient.get(`/api/deliverables/project/${projectId}`),
 };
 
 // Categories API
 export const CategoryAPI = {
-  getAll: (): Promise<AxiosResponse> => apiClient.get('/categories'),
+  getAll: (): Promise<AxiosResponse> => apiClient.get('/api/categories'),
   getById: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/categories/${id}`),
+    apiClient.get(`/api/categories/${id}`),
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/categories', data),
+    apiClient.post('/api/categories', data),
   update: (id: string | number, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/categories/${id}`, data),
+    apiClient.put(`/api/categories/${id}`, data),
   delete: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.delete(`/categories/${id}`),
+    apiClient.delete(`/api/categories/${id}`),
   checkName: (name: string): Promise<AxiosResponse> => 
-    apiClient.get('/categories/check-name', { params: { name } }),
+    apiClient.get('/api/categories/check-name', { params: { name } }),
   getWithWorkPackages: (): Promise<AxiosResponse> => 
-    apiClient.get('/categories/with-work-packages'),
+    apiClient.get('/api/categories/with-work-packages'),
   getByBusinessUnit: (businessUnitId: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/categories/business-unit/${businessUnitId}`),
+    apiClient.get(`/api/categories/business-unit/${businessUnitId}`),
   getWithCounts: (): Promise<AxiosResponse> => 
-    apiClient.get('/categories/with-counts'),
+    apiClient.get('/api/categories/with-counts'),
 };
 
 // Work Packages API
 export const WorkPackageAPI = {
-  getAll: (): Promise<AxiosResponse> => apiClient.get('/workpackages'),
+  getAll: (): Promise<AxiosResponse> => apiClient.get('/api/workpackages'),
   getById: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/workpackages/${id}`),
+    apiClient.get(`/api/workpackages/${id}`),
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/workpackages', data),
+    apiClient.post('/api/workpackages', data),
   update: (id: string | number, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/workpackages/${id}`, data),
+    apiClient.put(`/api/workpackages/${id}`, data),
   delete: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.delete(`/workpackages/${id}`),
+    apiClient.delete(`/api/workpackages/${id}`),
   getByCategory: (categoryId: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/workpackages/category/${categoryId}`),
+    apiClient.get(`/api/workpackages/category/${categoryId}`),
   getByDeliverable: (deliverableId: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/workpackages/deliverable/${deliverableId}`),
+    apiClient.get(`/api/workpackages/deliverable/${deliverableId}`),
   checkCode: (code: string): Promise<AxiosResponse> => 
-    apiClient.get('/workpackages/check-code', { params: { code } }),
+    apiClient.get('/api/workpackages/check-code', { params: { code } }),
   validateDates: (deliverableId: string, dates: any): Promise<AxiosResponse> => 
-    apiClient.post(`/workpackages/validate-dates/${deliverableId}`, dates),
+    apiClient.post(`/api/workpackages/validate-dates/${deliverableId}`, dates),
   getWithDeliverable: (): Promise<AxiosResponse> => 
-    apiClient.get('/workpackages/with-deliverable'),
+    apiClient.get('/api/workpackages/with-deliverable'),
   getWithCategory: (): Promise<AxiosResponse> => 
-    apiClient.get('/workpackages/with-category'),
+    apiClient.get('/api/workpackages/with-category'),
   getByProject: (projectId: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/workpackages/project/${projectId}`),
+    apiClient.get(`/api/workpackages/project/${projectId}`),
 };
 
 // Companies API
 export const CompanyAPI = {
-  getAll: (): Promise<AxiosResponse> => apiClient.get('/companies'),
+  getAll: (): Promise<AxiosResponse> => apiClient.get('/api/companies'),
   getById: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.get(`/companies/${id}`),
+    apiClient.get(`/api/companies/${id}`),
   getBySlug: (slug: string): Promise<AxiosResponse> => 
-    apiClient.get(`/companies/slug/${slug}`),
+    apiClient.get(`/api/companies/slug/${slug}`),
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/companies', data),
+    apiClient.post('/api/companies', data),
   update: (id: string | number, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/companies/${id}`, data),
+    apiClient.put(`/api/companies/${id}`, data),
   patch: (id: string | number, data: any): Promise<AxiosResponse> => 
-    apiClient.patch(`/companies/${id}`, data),
+    apiClient.patch(`/api/companies/${id}`, data),
   delete: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.delete(`/companies/${id}`),
+    apiClient.delete(`/api/companies/${id}`),
   toggleStatus: (id: string | number): Promise<AxiosResponse> => 
-    apiClient.patch(`/companies/${id}/toggle-status`),
+    apiClient.patch(`/api/companies/${id}/toggle-status`),
   checkSlug: (slug: string): Promise<AxiosResponse> => 
-    apiClient.get('/companies/check-slug', { params: { slug } }),
+    apiClient.get('/api/companies/check-slug', { params: { slug } }),
   checkName: (name: string): Promise<AxiosResponse> => 
-    apiClient.get('/companies/check-name', { params: { name } }),
+    apiClient.get('/api/companies/check-name', { params: { name } }),
   getWithStats: (): Promise<AxiosResponse> => 
-    apiClient.get('/companies/with-stats'),
+    apiClient.get('/api/companies/with-stats'),
   getActive: (): Promise<AxiosResponse> => 
-    apiClient.get('/companies/active'),
+    apiClient.get('/api/companies/active'),
   search: (query: string): Promise<AxiosResponse> => 
-    apiClient.get('/companies/search', { params: { q: query } }),
+    apiClient.get('/api/companies/search', { params: { q: query } }),
 };
 
 // Schedules API
 export const ScheduleAPI = {
   // Basic CRUD operations
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/schedules', { params }),
+    apiClient.get('/api/schedules', { params }),
   
   getById: (id: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedules/${id}`),
+    apiClient.get(`/api/schedules/${id}`),
   
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/schedules', data),
+    apiClient.post('/api/schedules', data),
   
   update: (id: string, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/schedules/${id}`, data),
+    apiClient.put(`/api/schedules/${id}`, data),
   
   delete: (id: string): Promise<AxiosResponse> => 
-    apiClient.delete(`/schedules/${id}`),
+    apiClient.delete(`/api/schedules/${id}`),
   
   // Check endpoints
   checkCode: (code: string): Promise<AxiosResponse> => 
-    apiClient.get('/schedules/check-code', { params: { code } }),
+    apiClient.get('/api/schedules/check-code', { params: { code } }),
   
   checkBaseline: (workpackage_id: string): Promise<AxiosResponse> => 
-    apiClient.get('/schedules/baseline-check', { params: { workpackage_id } }),
+    apiClient.get('/api/schedules/baseline-check', { params: { workpackage_id } }),
   
   checkTypeAvailability: (workpackage_id: string, type: string): Promise<AxiosResponse> => 
-    apiClient.get('/schedules/type-check', { params: { workpackage_id, type } }),
+    apiClient.get('/api/schedules/type-check', { params: { workpackage_id, type } }),
   
   // Get by various criteria
   getByCode: (code: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedules/code/${code}`, { params }),
+    apiClient.get(`/api/schedules/code/${code}`, { params }),
   
   getByWorkpackage: (workpackageId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedules/workpackage/${workpackageId}`, { params }),
+    apiClient.get(`/api/schedules/workpackage/${workpackageId}`, { params }),
   
   getBaselineForWorkPackage: (workpackageId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedules/workpackage/${workpackageId}/baseline`),
+    apiClient.get(`/api/schedules/workpackage/${workpackageId}/baseline`),
   
   getActualForWorkPackage: (workpackageId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedules/workpackage/${workpackageId}/actual`),
+    apiClient.get(`/api/schedules/workpackage/${workpackageId}/actual`),
   
   getScheduleByWorkpackageAndType: (workpackageId: string, type: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedules/workpackage/${workpackageId}/type/${type}`, { params }),
+    apiClient.get(`/api/schedules/workpackage/${workpackageId}/type/${type}`, { params }),
   
   // Statistics and counts
   getTypesCount: (): Promise<AxiosResponse> => 
-    apiClient.get('/schedules/types/count'),
+    apiClient.get('/api/schedules/types/count'),
   
   getStatistics: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/schedules/statistics', { params }),
+    apiClient.get('/api/schedules/statistics', { params }),
   
   // Get schedules by type
   getSchedulesByType: (type: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedules/type/${type}`, { params }),
+    apiClient.get(`/api/schedules/type/${type}`, { params }),
   
   // Recent schedules
   getRecentSchedules: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/schedules/recent', { params }),
+    apiClient.get('/api/schedules/recent', { params }),
   
   // Create schedule by type for work package
   createBaselineSchedule: (workpackageId: string, data: any): Promise<AxiosResponse> => 
-    apiClient.post(`/schedules/workpackage/${workpackageId}/baseline`, data),
+    apiClient.post(`/api/schedules/workpackage/${workpackageId}/baseline`, data),
   
   createActualSchedule: (workpackageId: string, data: any): Promise<AxiosResponse> => 
-    apiClient.post(`/schedules/workpackage/${workpackageId}/actual`, data),
+    apiClient.post(`/api/schedules/workpackage/${workpackageId}/actual`, data),
 };
 
 // Schedule Revisions API
 export const ScheduleRevisionsAPI = {
   // Validation methods
   validateProjectCodePattern: (scheduleId: string, formData: FormData): Promise<AxiosResponse> =>
-    apiClient.post(`/schedule-revisions/${scheduleId}/validate-code-pattern`, formData, {
+    apiClient.post(`/api/schedule-revisions/${scheduleId}/validate-code-pattern`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
 
   extractProjectCodePattern: (formData: FormData): Promise<AxiosResponse> =>
-    apiClient.post('/schedule-revisions/extract-code-pattern', formData, {
+    apiClient.post('/api/schedule-revisions/extract-code-pattern', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
 
   compareProjectCodePatterns: (scheduleCode: string, xerProjectCode: string): Promise<AxiosResponse> =>
-    apiClient.get('/schedule-revisions/compare-code-patterns', {
+    apiClient.get('/api/schedule-revisions/compare-code-patterns', {
       params: { schedule_code: scheduleCode, xer_code: xerProjectCode }
     }),
 
   validateRevisionUpload: (scheduleId: string, file: File): Promise<AxiosResponse> => {
     const formData = new FormData();
     formData.append('schedule_file', file);
-    return apiClient.post(`/schedule-revisions/${scheduleId}/validate-upload`, formData, {
+    return apiClient.post(`/api/schedule-revisions/${scheduleId}/validate-upload`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
   
   // Basic CRUD operations
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/schedule-revisions', { params }),
+    apiClient.get('/api/schedule-revisions', { params }),
   
   getById: (id: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/${id}`),
+    apiClient.get(`/api/schedule-revisions/${id}`),
   
   getByNumber: (scheduleId: string, revisionNumber: number): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/schedule/${scheduleId}/${revisionNumber}`),
+    apiClient.get(`/api/schedule-revisions/schedule/${scheduleId}/${revisionNumber}`),
   
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/schedule-revisions', data),
+    apiClient.post('/api/schedule-revisions', data),
   
   upload: (formData: FormData): Promise<AxiosResponse> => 
-    apiClient.post('/schedule-revisions/upload', formData, {
+    apiClient.post('/api/schedule-revisions/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
   
   uploadWithProgress: (formData: FormData, onUploadProgress?: (progressEvent: any) => void): Promise<AxiosResponse> => 
-    apiClient.post('/schedule-revisions/upload', formData, {
+    apiClient.post('/api/schedule-revisions/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,
     }),
   
   update: (id: string, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/schedule-revisions/${id}`, data),
+    apiClient.put(`/api/schedule-revisions/${id}`, data),
   
   delete: (id: string): Promise<AxiosResponse> => 
-    apiClient.delete(`/schedule-revisions/${id}`),
+    apiClient.delete(`/api/schedule-revisions/${id}`),
   
   // Status management
   updateStatus: (id: string, data: { revision_status: 'under_review' | 'current' | 'superseded', revision_notes?: string }): Promise<AxiosResponse> => 
-    apiClient.patch(`/schedule-revisions/${id}/status`, data),
+    apiClient.patch(`/api/schedule-revisions/${id}/status`, data),
   
   markCurrent: (id: string): Promise<AxiosResponse> => 
-    apiClient.patch(`/schedule-revisions/${id}/mark-current`),
+    apiClient.patch(`/api/schedule-revisions/${id}/mark-current`),
   
   createAndSupersede: (data: {
     schedule_id: string;
@@ -803,77 +788,77 @@ export const ScheduleRevisionsAPI = {
     if (data.planned_finish) formData.append('planned_finish', data.planned_finish);
     if (data.supersedes_revision_id) formData.append('supersedes_revision_id', data.supersedes_revision_id);
     
-    return apiClient.post('/schedule-revisions/create-and-supersede', formData, {
+    return apiClient.post('/api/schedule-revisions/create-and-supersede', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
   
   uploadNewRevision: (formData: FormData, onUploadProgress?: (progressEvent: any) => void): Promise<AxiosResponse> => 
-    apiClient.post('/schedule-revisions/upload-new', formData, {
+    apiClient.post('/api/schedule-revisions/upload-new', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,
     }),
   
   downloadFile: (id: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/${id}/download`, { responseType: 'blob' }),
+    apiClient.get(`/api/schedule-revisions/${id}/download`, { responseType: 'blob' }),
   
   checkDuplicate: (formData: FormData): Promise<AxiosResponse> => 
-    apiClient.post('/schedule-revisions/check-duplicate', formData, {
+    apiClient.post('/api/schedule-revisions/check-duplicate', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
   
   getBySchedule: (scheduleId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/schedule/${scheduleId}`, { params }),
+    apiClient.get(`/api/schedule-revisions/schedule/${scheduleId}`, { params }),
   
   getCurrentBySchedule: (scheduleId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/schedule/${scheduleId}/current`, { params }),
+    apiClient.get(`/api/schedule-revisions/schedule/${scheduleId}/current`, { params }),
   
   getLatestBySchedule: (scheduleId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/schedule/${scheduleId}/latest`, { params }),
+    apiClient.get(`/api/schedule-revisions/schedule/${scheduleId}/latest`, { params }),
   
   getByFileHash: (hash: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/hash/${hash}`, { params }),
+    apiClient.get(`/api/schedule-revisions/hash/${hash}`, { params }),
   
   getByRevisionStatus: (status: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/status/${status}`, { params }),
+    apiClient.get(`/api/schedule-revisions/status/${status}`, { params }),
   
   getStatistics: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/schedule-revisions/statistics', { params }),
+    apiClient.get('/api/schedule-revisions/statistics', { params }),
   
   getRevisionCount: (scheduleId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/schedule/${scheduleId}/count`),
+    apiClient.get(`/api/schedule-revisions/schedule/${scheduleId}/count`),
   
   getNextRevisionNumber: (scheduleId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/schedule/${scheduleId}/next-revision-number`),
+    apiClient.get(`/api/schedule-revisions/schedule/${scheduleId}/next-revision-number`),
   
   compareRevisions: (revisionId1: string, revisionId2: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/compare/${revisionId1}/${revisionId2}`, { params }),
+    apiClient.get(`/api/schedule-revisions/compare/${revisionId1}/${revisionId2}`, { params }),
   
   exportRevision: (id: string, format: string = 'json'): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/${id}/export`, { 
+    apiClient.get(`/api/schedule-revisions/${id}/export`, { 
       params: { format },
       responseType: format === 'json' ? 'json' : 'blob'
     }),
   
   bulkDelete: (revisionIds: string[]): Promise<AxiosResponse> => 
-    apiClient.delete('/schedule-revisions/bulk/delete', { data: { revisionIds } }),
+    apiClient.delete('/api/schedule-revisions/bulk/delete', { data: { revisionIds } }),
   
   bulkUpdateStatus: (revisionIds: string[], status: string, revision_notes?: string): Promise<AxiosResponse> => 
-    apiClient.patch('/schedule-revisions/bulk/status', { revisionIds, revision_status: status, revision_notes }),
+    apiClient.patch('/api/schedule-revisions/bulk/status', { revisionIds, revision_status: status, revision_notes }),
   
   getRevisionLineage: (revisionId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/${revisionId}/lineage`),
+    apiClient.get(`/api/schedule-revisions/${revisionId}/lineage`),
   
   getSupersedingRevisions: (revisionId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/${revisionId}/superseding`),
+    apiClient.get(`/api/schedule-revisions/${revisionId}/superseding`),
   
   getSupersededRevisions: (revisionId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/schedule-revisions/${revisionId}/superseded`),
+    apiClient.get(`/api/schedule-revisions/${revisionId}/superseded`),
   
   validateFile: (file: File): Promise<AxiosResponse> => {
     const formData = new FormData();
     formData.append('schedule_file', file);
-    return apiClient.post('/schedule-revisions/validate-file', formData, {
+    return apiClient.post('/api/schedule-revisions/validate-file', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
@@ -881,170 +866,170 @@ export const ScheduleRevisionsAPI = {
 
 // System API
 export const SystemAPI = {
-  health: (): Promise<AxiosResponse> => apiClient.get('/health'),
-  testDb: (): Promise<AxiosResponse> => apiClient.get('/test-db'),
-  corsTest: (): Promise<AxiosResponse> => apiClient.get('/cors-test'),
-  version: (): Promise<AxiosResponse> => apiClient.get('/version'),
-  config: (): Promise<AxiosResponse> => apiClient.get('/config'),
+  health: (): Promise<AxiosResponse> => apiClient.get('/api/health'),
+  testDb: (): Promise<AxiosResponse> => apiClient.get('/api/test-db'),
+  corsTest: (): Promise<AxiosResponse> => apiClient.get('/api/cors-test'),
+  version: (): Promise<AxiosResponse> => apiClient.get('/api/version'),
+  config: (): Promise<AxiosResponse> => apiClient.get('/api/config'),
 };
 
 // Excel Templates API
 export const ExcelTemplateAPI = {
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/excel-templates', { params }),
+    apiClient.get('/api/excel-templates', { params }),
   
   getById: (id: string): Promise<AxiosResponse> => 
-    apiClient.get(`/excel-templates/${id}`),
+    apiClient.get(`/api/excel-templates/${id}`),
   
   getByCode: (code: string): Promise<AxiosResponse> => 
-    apiClient.get(`/excel-templates/code/${code}`),
+    apiClient.get(`/api/excel-templates/code/${code}`),
   
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/excel-templates', data),
+    apiClient.post('/api/excel-templates', data),
   
   update: (id: string, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/excel-templates/${id}`, data),
+    apiClient.put(`/api/excel-templates/${id}`, data),
   
   delete: (id: string): Promise<AxiosResponse> => 
-    apiClient.delete(`/excel-templates/${id}`),
+    apiClient.delete(`/api/excel-templates/${id}`),
   
   uploadTemplate: (formData: FormData, onUploadProgress?: (progressEvent: any) => void): Promise<AxiosResponse> => 
-    apiClient.post('/excel-templates/upload', formData, {
+    apiClient.post('/api/excel-templates/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,
     }),
   
   downloadTemplate: (id: string): Promise<AxiosResponse> => 
-    apiClient.get(`/excel-templates/${id}/download`, { responseType: 'blob' }),
+    apiClient.get(`/api/excel-templates/${id}/download`, { responseType: 'blob' }),
   
   getByScheduleType: (scheduleType: string): Promise<AxiosResponse> => 
-    apiClient.get('/excel-templates/by-schedule-type', { params: { schedule_type: scheduleType } }),
+    apiClient.get('/api/excel-templates/by-schedule-type', { params: { schedule_type: scheduleType } }),
   
   getLatestVersion: (code: string): Promise<AxiosResponse> => 
-    apiClient.get(`/excel-templates/code/${code}/latest`),
+    apiClient.get(`/api/excel-templates/code/${code}/latest`),
   
   validateTemplate: (id: string, fileData: any): Promise<AxiosResponse> => 
-    apiClient.post(`/excel-templates/${id}/validate`, fileData),
+    apiClient.post(`/api/excel-templates/${id}/validate`, fileData),
 };
 
 // Activity API
 export const ActivityAPI = {
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/activities', { params }),
+    apiClient.get('/api/activities', { params }),
   
   getById: (id: string): Promise<AxiosResponse> => 
-    apiClient.get(`/activities/${id}`),
+    apiClient.get(`/api/activities/${id}`),
   
   getByRevision: (revisionId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/activities/revision/${revisionId}`, { params }),
+    apiClient.get(`/api/activities/revision/${revisionId}`, { params }),
   
   create: (data: any): Promise<AxiosResponse> => 
-    apiClient.post('/activities', data),
+    apiClient.post('/api/activities', data),
   
   update: (id: string, data: any): Promise<AxiosResponse> => 
-    apiClient.put(`/activities/${id}`, data),
+    apiClient.put(`/api/activities/${id}`, data),
   
   delete: (id: string): Promise<AxiosResponse> => 
-    apiClient.delete(`/activities/${id}`),
+    apiClient.delete(`/api/activities/${id}`),
   
   bulkCreate: (activities: any[]): Promise<AxiosResponse> => 
-    apiClient.post('/activities/bulk', { activities }),
+    apiClient.post('/api/activities/bulk', { activities }),
   
   importFromRevision: (revisionId: string, options?: any): Promise<AxiosResponse> => 
-    apiClient.post(`/activities/import/revision/${revisionId}`, options),
+    apiClient.post(`/api/activities/import/revision/${revisionId}`, options),
   
   getStatistics: (revisionId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/activities/revision/${revisionId}/statistics`),
+    apiClient.get(`/api/activities/revision/${revisionId}/statistics`),
   
   compareRevisions: (revisionId1: string, revisionId2: string): Promise<AxiosResponse> => 
-    apiClient.get(`/activities/compare/${revisionId1}/${revisionId2}`),
+    apiClient.get(`/api/activities/compare/${revisionId1}/${revisionId2}`),
 };
 
 // Analytics and Reports API
 export const AnalyticsAPI = {
   getScheduleMetrics: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/analytics/schedule-metrics', { params }),
+    apiClient.get('/api/analytics/schedule-metrics', { params }),
   
   getRevisionTrends: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/analytics/revision-trends', { params }),
+    apiClient.get('/api/analytics/revision-trends', { params }),
   
   getFileTypeDistribution: (): Promise<AxiosResponse> => 
-    apiClient.get('/analytics/file-type-distribution'),
+    apiClient.get('/api/analytics/file-type-distribution'),
   
   getRevisionStatusSummary: (): Promise<AxiosResponse> => 
-    apiClient.get('/analytics/revision-status-summary'),
+    apiClient.get('/api/analytics/revision-status-summary'),
   
   exportRevisionsReport: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/analytics/export/revisions-report', { 
+    apiClient.get('/api/analytics/export/revisions-report', { 
       params,
       responseType: 'blob' 
     }),
   
   exportScheduleHistory: (scheduleId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/analytics/export/schedule-history/${scheduleId}`, { 
+    apiClient.get(`/api/analytics/export/schedule-history/${scheduleId}`, { 
       params,
       responseType: 'blob' 
     }),
   
   getDashboardStats: (): Promise<AxiosResponse> => 
-    apiClient.get('/analytics/dashboard-stats'),
+    apiClient.get('/api/analytics/dashboard-stats'),
   
   getRecentActivities: (limit?: number): Promise<AxiosResponse> => 
-    apiClient.get('/analytics/recent-activities', { params: { limit } }),
+    apiClient.get('/api/analytics/recent-activities', { params: { limit } }),
   
   getTopSchedules: (limit?: number): Promise<AxiosResponse> => 
-    apiClient.get('/analytics/top-schedules', { params: { limit } }),
+    apiClient.get('/api/analytics/top-schedules', { params: { limit } }),
 };
 
 // Notifications API
 export const NotificationAPI = {
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/notifications', { params }),
+    apiClient.get('/api/notifications', { params }),
   
   getUnread: (): Promise<AxiosResponse> => 
-    apiClient.get('/notifications/unread'),
+    apiClient.get('/api/notifications/unread'),
   
   markAsRead: (id: string): Promise<AxiosResponse> => 
-    apiClient.patch(`/notifications/${id}/read`),
+    apiClient.patch(`/api/notifications/${id}/read`),
   
   markAllAsRead: (): Promise<AxiosResponse> => 
-    apiClient.patch('/notifications/mark-all-read'),
+    apiClient.patch('/api/notifications/mark-all-read'),
   
   delete: (id: string): Promise<AxiosResponse> => 
-    apiClient.delete(`/notifications/${id}`),
+    apiClient.delete(`/api/notifications/${id}`),
   
   getRevisionNotifications: (): Promise<AxiosResponse> => 
-    apiClient.get('/notifications/type/revision'),
+    apiClient.get('/api/notifications/type/revision'),
   
   getApprovalNotifications: (): Promise<AxiosResponse> => 
-    apiClient.get('/notifications/type/approval'),
+    apiClient.get('/api/notifications/type/approval'),
   
   subscribe: (userId: string): Promise<AxiosResponse> => 
-    apiClient.post('/notifications/subscribe', { user_id: userId }),
+    apiClient.post('/api/notifications/subscribe', { user_id: userId }),
 };
 
 // Audit Log API
 export const AuditLogAPI = {
   getAll: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/audit-logs', { params }),
+    apiClient.get('/api/audit-logs', { params }),
   
   getByEntity: (entityType: string, entityId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/audit-logs/entity/${entityType}/${entityId}`, { params }),
+    apiClient.get(`/api/audit-logs/entity/${entityType}/${entityId}`, { params }),
   
   getByUser: (userId: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/audit-logs/user/${userId}`, { params }),
+    apiClient.get(`/api/audit-logs/user/${userId}`, { params }),
   
   getByAction: (action: string, params?: any): Promise<AxiosResponse> => 
-    apiClient.get(`/audit-logs/action/${action}`, { params }),
+    apiClient.get(`/api/audit-logs/action/${action}`, { params }),
   
   getRevisionAuditLogs: (revisionId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/audit-logs/revision/${revisionId}`),
+    apiClient.get(`/api/audit-logs/revision/${revisionId}`),
   
   getScheduleAuditLogs: (scheduleId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/audit-logs/schedule/${scheduleId}`),
+    apiClient.get(`/api/audit-logs/schedule/${scheduleId}`),
   
   exportAuditLogs: (params?: any): Promise<AxiosResponse> => 
-    apiClient.get('/audit-logs/export', { 
+    apiClient.get('/api/audit-logs/export', { 
       params,
       responseType: 'blob' 
     }),
@@ -1053,25 +1038,25 @@ export const AuditLogAPI = {
 // Dashboard API
 export const DashboardAPI = {
   getOverview: (): Promise<AxiosResponse> => 
-    apiClient.get('/dashboard/overview'),
+    apiClient.get('/api/dashboard/overview'),
   
   getScheduleOverview: (): Promise<AxiosResponse> => 
-    apiClient.get('/dashboard/schedule-overview'),
+    apiClient.get('/api/dashboard/schedule-overview'),
   
   getRevisionOverview: (): Promise<AxiosResponse> => 
-    apiClient.get('/dashboard/revision-overview'),
+    apiClient.get('/api/dashboard/revision-overview'),
   
   getRecentRevisions: (limit?: number): Promise<AxiosResponse> => 
-    apiClient.get('/dashboard/recent-revisions', { params: { limit } }),
+    apiClient.get('/api/dashboard/recent-revisions', { params: { limit } }),
   
   getPendingApprovals: (): Promise<AxiosResponse> => 
-    apiClient.get('/dashboard/pending-approvals'),
+    apiClient.get('/api/dashboard/pending-approvals'),
   
   getScheduleStats: (scheduleId: string): Promise<AxiosResponse> => 
-    apiClient.get(`/dashboard/schedule-stats/${scheduleId}`),
+    apiClient.get(`/api/dashboard/schedule-stats/${scheduleId}`),
   
   getUserActivity: (userId?: string): Promise<AxiosResponse> => 
-    apiClient.get('/dashboard/user-activity', { params: { user_id: userId } }),
+    apiClient.get('/api/dashboard/user-activity', { params: { user_id: userId } }),
 };
 
 // Export API constants
