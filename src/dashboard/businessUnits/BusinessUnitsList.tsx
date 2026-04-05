@@ -1,4 +1,6 @@
+// BusinessUnitList.tsx
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   useReactTable, 
   getCoreRowModel, 
@@ -64,6 +66,7 @@ interface DatabaseInfo {
 }
 
 export function BusinessUnitList() {
+  const navigate = useNavigate();
   const [businessUnits, setBusinessUnits] = useState<BusinessUnit[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -269,14 +272,14 @@ export function BusinessUnitList() {
   // Handle edit business unit
   const handleEdit = (businessUnit: BusinessUnit) => {
     console.log('Edit business unit:', businessUnit);
-    window.location.href = `/business-units/edit/${businessUnit.id}`;
+    navigate(`/business-units/edit/${businessUnit.id}`);
   };
 
   // Fetch business units from API
   const fetchData = async () => {
     try {
       setLoading(true);
-      setError(null); // IMPORTANT: Clear any previous errors
+      setError(null);
       setSuccessMessage(null);
       
       console.log('🚀 Starting data fetch...');
@@ -304,23 +307,18 @@ export function BusinessUnitList() {
         businessUnitsData = extractBusinessUnits(rawData);
         console.log(`✅ Extracted ${businessUnitsData.length} business units`);
         
-        // IMPORTANT: Empty array is NOT an error
-        // Only set error if there's a real problem
         if (businessUnitsData.length === 0) {
           console.log('ℹ️ No business units found - this is normal when database is empty');
-          // DO NOT set error here - empty is normal
         }
         
       } catch (error: any) {
         console.error('❌ Error fetching business units:', error);
         const formattedError = ApiUtils.handleApiError(error);
         
-        // Only throw for real connection/server errors
         if (formattedError.status === 0 || formattedError.status === 404 || formattedError.status === 500) {
           throw new Error(`Failed to fetch business units: ${formattedError.message}`);
         }
         
-        // For other errors, just log and continue with empty array
         console.log('⚠️ Non-critical error, continuing with empty array');
         businessUnitsData = [];
       }
@@ -521,7 +519,7 @@ export function BusinessUnitList() {
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
               <Button 
-                onClick={() => window.location.href = '/business-units/create'}
+                onClick={() => navigate('/business-units/create')}
                 className="flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" />
@@ -629,7 +627,7 @@ export function BusinessUnitList() {
                 </p>
                 <div className="mt-4 space-x-2">
                   <Button 
-                    onClick={() => window.location.href = '/business-units/create'}
+                    onClick={() => navigate('/business-units/create')}
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Create First Business Unit
