@@ -1,4 +1,3 @@
-# frontend/render.yaml
 services:
   - type: static
     name: pmsimplex-frontend
@@ -9,3 +8,10 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://pmsimplex-b-04-04-26.onrender.com
+    headers:
+      - path: /assets/*.css
+        name: Content-Type
+        value: text/css
+      - path: /assets/*.js
+        name: Content-Type
+        value: application/javascript
