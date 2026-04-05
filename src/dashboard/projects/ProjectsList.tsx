@@ -1,5 +1,6 @@
 // ProjectsList.tsx
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   useReactTable, 
   getCoreRowModel, 
@@ -93,6 +94,7 @@ interface BusinessUnit {
 }
 
 export function ProjectsList() {
+  const navigate = useNavigate();
   const { can } = useAuth();
   
   const [projects, setProjects] = useState<Project[]>([]);
@@ -388,7 +390,7 @@ export function ProjectsList() {
 
   // Handle edit project
   const handleEdit = (project: Project) => {
-    window.location.href = `/projects/edit/${project.id}`;
+    navigate(`/projects/edit/${project.id}`);
   };
 
   // Handle health status update
@@ -767,7 +769,7 @@ export function ProjectsList() {
               {/* ✅ Afficher le bouton Create Project seulement si l'utilisateur a la permission */}
               {can(PERMISSIONS.PROJECT_CREATE) && (
                 <Button 
-                  onClick={() => window.location.href = '/projects/create'}
+                  onClick={() => navigate('/projects/create')}
                   className="flex items-center gap-2"
                 >
                   <Plus className="h-4 w-4" />
@@ -916,7 +918,7 @@ export function ProjectsList() {
                 {(!searchTerm && selectedHealthStatus === 'ALL' && selectedPhase === 'ALL' && selectedBusinessUnit === 'ALL') && (
                   can(PERMISSIONS.PROJECT_CREATE) && (
                     <Button 
-                      onClick={() => window.location.href = '/projects/create'}
+                      onClick={() => navigate('/projects/create')}
                       className="mt-4"
                     >
                       <Plus className="h-4 w-4 mr-2" />
